@@ -11,6 +11,40 @@ Configuration is done using environment variables:
 * `AMQP_USER`: RabbitMQ user
 * `AMQP_PASS`: RabbitMQ password
 * `AMQP_VHOST`: RabbitMQ virtual host, defaults to '/'
+* `API_TOKEN`: An API token for accessing the endpoint (default: empty, no authorization)
+
+## API
+
+### Pulse Message
+
+Pulses are encoded as messages with a [UNIX timestamp](https://www.unixtimestamp.com/) in the JSON form
+```json
+{
+  "timestamp": 1234567890
+}
+```
+
+### REST
+
+Post a pulse message by calling `POST /pulse` with the above pulse message JSON form.
+
+If authorization is configured, the `API_TOKEN` must be provided as bearer token in the `Authorization` header, e.g.
+```
+Authorization: Bearer hu3aiF9enaXa5BaesieNgafe5tee0The
+```
+
+This call returns one of the following codes:
+* `201` if the call was successful (created)
+* `400` if the body argument is invalid
+* `401` if authorization failed
+* `504` if the AMQP queue is not available.
+
+On return code `504` the call should be retried at a later point. In any other case the call should not be retried.
+
+Please note that the gateway send any valid JSON message to the AMQP queue. 
+Idempotency is not considered by the gateway in the sense that an already sent timestamp will not be suppressed.
+
+**Note: In the current implementation only a log message is posted.**
 
 
 ## Deployment
