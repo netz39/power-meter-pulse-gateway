@@ -1,6 +1,6 @@
 # Power Meter Pulse Gateway
 
-> Gateway for Power Meter Pulses from ESP32 to RabbitmQ
+> Gateway for Power Meter Pulses from an ESP32 (or another REST client) to RabbitMQ
 
 ## Configuration
 
