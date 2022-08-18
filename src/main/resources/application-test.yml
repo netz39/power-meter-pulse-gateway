@@ -14,3 +14,5 @@ netty:
 # https://micronaut-projects.github.io/micronaut-rabbitmq/latest/guide/#config
 rabbitmq:
   enabled: false
+
+pulse-binding: "pulses"

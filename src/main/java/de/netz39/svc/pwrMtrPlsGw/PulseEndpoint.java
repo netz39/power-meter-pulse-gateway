@@ -3,12 +3,16 @@ package de.netz39.svc.pwrMtrPlsGw;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpHeaders;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Error;
 import io.micronaut.http.annotation.Header;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.rabbitmq.exception.RabbitClientException;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,10 +28,17 @@ public class PulseEndpoint {
     @Property(name="api-token")
     String apiToken;
 
+    @Property(name = "pulse-binding")
+    String pulseDestination;
+
+    @Inject
+    AmqpEmitter emitter;
+
+
     @Post
     @ApiResponse(responseCode = "201", description = "AMQP call successful")
     @ApiResponse(responseCode = "400", description = "Invalid call arguments")
-    @ApiResponse(responseCode = "504", description = "Timeout waiting for backend response")
+    @ApiResponse(responseCode = "504", description = "Timeout or error while connecting to RabbitMQ, please retry!")
     public HttpStatus pulse(@Body PulseMessage body,
                             @Header(HttpHeaders.AUTHORIZATION) @Nullable String authorization) {
         // Check Authorization if configured
@@ -36,9 +47,10 @@ public class PulseEndpoint {
             return HttpStatus.UNAUTHORIZED;
         }
 
-        LOGGER.info("Received timestamp {}", body.getTimestamp());
+        LOGGER.debug("Received timestamp {}", body.getTimestamp());
 
-        // TODO AMQP call
+        // c.f. exception handling in onRabbitClientException
+        emitter.send(pulseDestination, body);
 
         return HttpStatus.CREATED;
     }
@@ -47,5 +59,10 @@ public class PulseEndpoint {
         return apiToken == null ||
                apiToken.isEmpty() ||
                ("Bearer " + apiToken).equals(authorization);
+    }
+
+    @Error(exception=RabbitClientException.class)
+    public HttpResponse<String> onRabbitClientException(RabbitClientException e) {
+        return HttpResponse.status(HttpStatus.GATEWAY_TIMEOUT).body(e.getMessage());
     }
 }
