@@ -11,6 +11,7 @@ Configuration is done using environment variables:
 * `AMQP_USER`: RabbitMQ user
 * `AMQP_PASS`: RabbitMQ password
 * `AMQP_VHOST`: RabbitMQ virtual host, defaults to '/'
+* `PULSE_BINDING`: RabbitMQ routing key name for pulse messages
 * `API_TOKEN`: An API token for accessing the endpoint (default: empty, no authorization)
 
 ## API
@@ -44,7 +45,13 @@ On return code `504` the call should be retried at a later point. In any other c
 Please note that the gateway send any valid JSON message to the AMQP queue. 
 Idempotency is not considered by the gateway in the sense that an already sent timestamp will not be suppressed.
 
-**Note: In the current implementation only a log message is posted.**
+### AMQP / RabbitMQ
+
+A pulse message that is received on the REST endpoint is sent to an AMQP queue with the routing key `PULSE_BINDING` on 
+the default exchange.
+
+Note that there is a deserialization/serialization step in this process, so invalid JSON or extra properties will be 
+caught by the gateway and not emitted to the exchange.
 
 
 ## Deployment
