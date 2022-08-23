@@ -15,6 +15,8 @@ import jakarta.inject.Singleton;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @Singleton
@@ -53,7 +55,7 @@ public class TestPulseEndpoint {
 
     @Test
     public void testValid() {
-        final PulseMessage msg =  PulseMessage.withTimestamp(0);
+        final PulseMessage msg =  PulseMessage.withTimestamp(Instant.EPOCH);
         final HttpRequest<PulseMessage> req = HttpRequest.POST("/pulse", msg);
         assertDoesNotThrow(
                 () -> client.toBlocking().exchange(req)
@@ -80,7 +82,7 @@ public class TestPulseEndpoint {
     public void testMissingRabbitMQ() {
         AmqpTestEmitter.except = new RabbitClientException("Test Exception");
 
-        final PulseMessage msg =  PulseMessage.withTimestamp(0);
+        final PulseMessage msg =  PulseMessage.withTimestamp(Instant.EPOCH);
         final HttpRequest<PulseMessage> req = HttpRequest.POST("/pulse", msg);
 
         final HttpClientResponseException e = assertThrows(
@@ -93,7 +95,7 @@ public class TestPulseEndpoint {
     @Test
     @Property(name = "api-token", value = "abc")
     public void TestValidAuth() {
-        final PulseMessage msg =  PulseMessage.withTimestamp(0);
+        final PulseMessage msg =  PulseMessage.withTimestamp(Instant.EPOCH);
         final MutableHttpRequest<PulseMessage> req = HttpRequest.POST("/pulse", msg).bearerAuth("abc");
         assertDoesNotThrow(
                 () -> client.toBlocking().exchange(req)
@@ -105,7 +107,7 @@ public class TestPulseEndpoint {
     @Test
     @Property(name = "api-token", value = "abc")
     public void TestInvalidAuth() {
-        final PulseMessage msg =  PulseMessage.withTimestamp(0);
+        final PulseMessage msg =  PulseMessage.withTimestamp(Instant.EPOCH);
         final MutableHttpRequest<PulseMessage> req = HttpRequest.POST("/pulse", msg);
         final HttpClientResponseException e = assertThrows(
                 HttpClientResponseException.class,
