@@ -18,10 +18,10 @@ Configuration is done using environment variables:
 
 ### Pulse Message
 
-Pulses are encoded as messages with a [UNIX timestamp](https://www.unixtimestamp.com/) in the JSON form
+Pulses are encoded as messages with a [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in the JSON form
 ```json
 {
-  "timestamp": 1234567890
+  "timestamp": "2022-08-23T16:54:23Z"
 }
 ```
 
