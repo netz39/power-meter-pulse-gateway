@@ -11,6 +11,8 @@ import io.micronaut.http.annotation.Error;
 import io.micronaut.http.annotation.Header;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.rabbitmq.exception.RabbitClientException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -36,10 +38,12 @@ public class PulseEndpoint {
 
 
     @Post
+    @Operation(summary = "Send a pulse message")
     @ApiResponse(responseCode = "201", description = "AMQP call successful")
     @ApiResponse(responseCode = "400", description = "Invalid call arguments")
-    @ApiResponse(responseCode = "504", description = "Timeout or error while connecting to RabbitMQ, please retry!")
+    @ApiResponse(responseCode = "504", description = "Timeout or error while connecting to RabbitMQ, please retry later!")
     public HttpStatus pulse(@Body PulseMessage body,
+                            @Parameter(description = "Authorization string as `Beaker <token>`, see README for details")
                             @Header(HttpHeaders.AUTHORIZATION) @Nullable String authorization) {
         // Check Authorization if configured
         if (! isValidAuth(authorization)) {

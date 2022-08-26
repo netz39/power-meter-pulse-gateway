@@ -45,6 +45,9 @@ On return code `504` the call should be retried at a later point. In any other c
 Please note that the gateway send any valid JSON message to the AMQP queue. 
 Idempotency is not considered by the gateway in the sense that an already sent timestamp will not be suppressed.
 
+An [OAS3 schema ](https://swagger.io/specification/) can be obtained under the  
+URL `/swagger/power-meter-pulse-gateway-0.1.yml`.
+
 ### AMQP / RabbitMQ
 
 A pulse message that is received on the REST endpoint is sent to an AMQP queue with the routing key `PULSE_BINDING` on 
