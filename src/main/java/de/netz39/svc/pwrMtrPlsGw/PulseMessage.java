@@ -3,6 +3,7 @@ package de.netz39.svc.pwrMtrPlsGw;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.context.annotation.Bean;
+import io.swagger.v3.oas.annotations.media.Schema;
 import net.jcip.annotations.Immutable;
 
 import java.time.Instant;
@@ -17,6 +18,7 @@ import java.time.Instant;
  *     }
  * </code>
  */
+@Schema(description = "Message encoding the timestamp of a power meter pulse")
 @Immutable
 @Bean
 public class PulseMessage {
@@ -26,6 +28,7 @@ public class PulseMessage {
 
     @JsonProperty("timestamp")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @Schema(description = "Timestamp in ISO 8601 form")
     private final Instant timestamp;
 
     PulseMessage(@JsonProperty(value="timestamp", required = true) Instant timestamp) {
