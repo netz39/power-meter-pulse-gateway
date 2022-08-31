@@ -1,24 +1,27 @@
 # Power Meter Pulse Gateway
 
+[![Maven Tests](https://github.com/netz39/power-meter-pulse-gateway/actions/workflows/maven-test.yml/badge.svg)](https://github.com/netz39/power-meter-pulse-gateway/actions/workflows/maven-test.yml)
+[![Docker Publish](https://github.com/netz39/power-meter-pulse-gateway/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/netz39/power-meter-pulse-gateway/actions/workflows/docker-publish.yml)
+
 > Gateway for Power Meter Pulses from an ESP32 (or another REST client) to RabbitMQ
 
 ## Configuration
 
-Configuration is done using environment variables:
+The service is configured with environment variables:
 
-* `PORT`: Port for the HTTP endpoint (default `8080`, only change when running locally!)
 * `AMQP_HOST`: RabbitMQ host
 * `AMQP_USER`: RabbitMQ user
 * `AMQP_PASS`: RabbitMQ password
 * `AMQP_VHOST`: RabbitMQ virtual host, defaults to '/'
 * `PULSE_BINDING`: RabbitMQ routing key name for pulse messages
 * `API_TOKEN`: An API token for accessing the endpoint (default: empty, no authorization)
+* `PORT`: Port for the HTTP endpoint (default `8080`, only change when running locally!)
 
 ## API
 
 ### Pulse Message
 
-Pulses are encoded as messages with a [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in the JSON form
+Pulses are encoded as messages with an [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in the JSON form
 ```json
 {
   "timestamp": "2022-08-23T16:54:23Z"
@@ -42,8 +45,7 @@ This call returns one of the following codes:
 
 On return code `504` the call should be retried at a later point. In any other case the call should not be retried.
 
-Please note that the gateway send any valid JSON message to the AMQP queue. 
-Idempotency is not considered by the gateway in the sense that an already sent timestamp will not be suppressed.
+Please note that idempotency is not considered by the gateway in the sense that an already sent timestamp will not be suppressed.
 
 An [OAS3 schema ](https://swagger.io/specification/) can be obtained under the  
 URL `/swagger/power-meter-pulse-gateway-0.1.yml`.
@@ -59,6 +61,19 @@ caught by the gateway and not emitted to the exchange.
 
 ## Deployment
 
+Both deployment methods below expect the configuration in a `.env` file.
+This file is part of the `.gitignore` and can safely be left in the local working copy.
+
+### Docker
+
+The gateway is intended to be run as a Docker container:
+```bash
+docker run --rm \ 
+  -p 8080:8080 \
+  --env-file .env \
+  netz39/power-meter-pulse-gateway
+```
+
 ### Development
 
 This project uses the [Micronaut Framework](https://micronaut.io/).
@@ -67,12 +82,10 @@ Version numbers are determined with [jgitver](https://jgitver.github.io/).
 Please check your [IDE settings](https://jgitver.github.io/#_ides_usage) to avoid problems, as there are still some unresolved issues.
 If you encounter a project version `0` there is an issue with the jgitver generator.
 
-For local execution the configuration can be provided in a `.env` file and made available using `dotenv`:
+To use the configuration from a `.env` file, run using [dotenv](https://github.com/therootcompany/dotenv):
 ```bash
 dotenv ./mvnw mn:run
 ```
-
-Note that `.env` is part of the `.gitignore` and can be safely stored in the local working copy.
 
 ## Build
 
