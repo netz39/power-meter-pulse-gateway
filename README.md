@@ -1,10 +1,13 @@
 # Power Meter Pulse Gateway
 
+[![Maven Tests](https://github.com/netz39/power-meter-pulse-gateway/actions/workflows/maven-test.yml/badge.svg)](https://github.com/netz39/power-meter-pulse-gateway/actions/workflows/maven-test.yml)
+[![Docker Publish](https://github.com/netz39/power-meter-pulse-gateway/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/netz39/power-meter-pulse-gateway/actions/workflows/docker-publish.yml)
+
 > Gateway for Power Meter Pulses from an ESP32 (or another REST client) to RabbitMQ
 
 ## Configuration
 
-The service is configure with environment variables:
+The service is configured with environment variables:
 
 * `AMQP_HOST`: RabbitMQ host
 * `AMQP_USER`: RabbitMQ user
