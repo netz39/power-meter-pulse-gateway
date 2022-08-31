@@ -4,21 +4,21 @@
 
 ## Configuration
 
-Configuration is done using environment variables:
+The service is configure with environment variables:
 
-* `PORT`: Port for the HTTP endpoint (default `8080`, only change when running locally!)
 * `AMQP_HOST`: RabbitMQ host
 * `AMQP_USER`: RabbitMQ user
 * `AMQP_PASS`: RabbitMQ password
 * `AMQP_VHOST`: RabbitMQ virtual host, defaults to '/'
 * `PULSE_BINDING`: RabbitMQ routing key name for pulse messages
 * `API_TOKEN`: An API token for accessing the endpoint (default: empty, no authorization)
+* `PORT`: Port for the HTTP endpoint (default `8080`, only change when running locally!)
 
 ## API
 
 ### Pulse Message
 
-Pulses are encoded as messages with a [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in the JSON form
+Pulses are encoded as messages with an [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in the JSON form
 ```json
 {
   "timestamp": "2022-08-23T16:54:23Z"
@@ -42,8 +42,7 @@ This call returns one of the following codes:
 
 On return code `504` the call should be retried at a later point. In any other case the call should not be retried.
 
-Please note that the gateway send any valid JSON message to the AMQP queue. 
-Idempotency is not considered by the gateway in the sense that an already sent timestamp will not be suppressed.
+Please note that idempotency is not considered by the gateway in the sense that an already sent timestamp will not be suppressed.
 
 An [OAS3 schema ](https://swagger.io/specification/) can be obtained under the  
 URL `/swagger/power-meter-pulse-gateway-0.1.yml`.
