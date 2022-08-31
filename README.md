@@ -59,6 +59,19 @@ caught by the gateway and not emitted to the exchange.
 
 ## Deployment
 
+Both deployment methods below expect the configuration in a `.env` file.
+This file is part of the `.gitignore` and can safely be left in the local working copy.
+
+### Docker
+
+The gateway is intended to be run as a Docker container:
+```bash
+docker run --rm \ 
+  -p 8080:8080 \
+  --env-file .env \
+  netz39/power-meter-pulse-gateway
+```
+
 ### Development
 
 This project uses the [Micronaut Framework](https://micronaut.io/).
@@ -67,12 +80,10 @@ Version numbers are determined with [jgitver](https://jgitver.github.io/).
 Please check your [IDE settings](https://jgitver.github.io/#_ides_usage) to avoid problems, as there are still some unresolved issues.
 If you encounter a project version `0` there is an issue with the jgitver generator.
 
-For local execution the configuration can be provided in a `.env` file and made available using `dotenv`:
+To use the configuration from a `.env` file, run using [dotenv](https://github.com/therootcompany/dotenv):
 ```bash
 dotenv ./mvnw mn:run
 ```
-
-Note that `.env` is part of the `.gitignore` and can be safely stored in the local working copy.
 
 ## Build
 
