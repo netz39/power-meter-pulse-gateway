@@ -7,6 +7,7 @@ import io.micronaut.rabbitmq.annotation.RabbitProperty;
 @RabbitClient
 public interface AmqpEmitter {
     @RabbitProperty(name = "contentType", value = "application/json")
+    @RabbitProperty(name = "deliveryMode", value = "2") // Durable messages
     void send(@Binding String destination,
               PulseMessage pulseMessage);
 }
