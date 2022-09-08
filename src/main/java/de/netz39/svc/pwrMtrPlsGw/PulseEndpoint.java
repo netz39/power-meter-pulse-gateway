@@ -41,7 +41,7 @@ public class PulseEndpoint {
     @Operation(summary = "Send a pulse message")
     @ApiResponse(responseCode = "201", description = "AMQP call successful")
     @ApiResponse(responseCode = "400", description = "Invalid call arguments")
-    @ApiResponse(responseCode = "504", description = "Timeout or error while connecting to RabbitMQ, please retry later!")
+    @ApiResponse(responseCode = "502", description = "Timeout or error while connecting to RabbitMQ, please retry later!")
     public HttpStatus pulse(@Body PulseMessage body,
                             @Parameter(description = "Authorization string as `Beaker <token>`, see README for details")
                             @Header(HttpHeaders.AUTHORIZATION) @Nullable String authorization) {
@@ -67,6 +67,6 @@ public class PulseEndpoint {
 
     @Error(exception=RabbitClientException.class)
     public HttpResponse<String> onRabbitClientException(RabbitClientException e) {
-        return HttpResponse.status(HttpStatus.GATEWAY_TIMEOUT).body(e.getMessage());
+        return HttpResponse.status(HttpStatus.BAD_GATEWAY).body(e.getMessage());
     }
 }
