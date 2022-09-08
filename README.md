@@ -41,9 +41,10 @@ This call returns one of the following codes:
 * `201` if the call was successful (created)
 * `400` if the body argument is invalid
 * `401` if authorization failed
-* `504` if the AMQP queue is not available.
+* `502` if the AMQP queue is not available.
 
-On return code `504` the call should be retried at a later point. In any other case the call should not be retried.
+On return code `502` the call should be retried at a later point. In any other case the call should not be retried.
+A `502` status code may also be returned by the reverse proxy if the service container is not running.
 
 Please note that idempotency is not considered by the gateway in the sense that an already sent timestamp will not be suppressed.
 
