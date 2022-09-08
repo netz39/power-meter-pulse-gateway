@@ -89,7 +89,7 @@ public class TestPulseEndpoint {
                 HttpClientResponseException.class,
                 () -> client.toBlocking().exchange(req)
         );
-        assertEquals(HttpStatus.GATEWAY_TIMEOUT.getCode(), e.getStatus().getCode());
+        assertEquals(HttpStatus.BAD_GATEWAY.getCode(), e.getStatus().getCode());
     }
 
     @Test
